@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>CareerQuest - Job Recommender</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    .dropdown-toggle::after {
+      display: none;
+    }
+    
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .theme-option {
+      cursor: pointer;
+    }
+    
+    .theme-icon {
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+    <a class="navbar-brand fw-bold" href="#">CareerQuest</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="recommend-resume.html">Upload Resume</a></li>
+        <li class="nav-item"><a class="nav-link" href="recommend-skill.html">Job Roles</a></li>
+        <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="signup.html">Sign Up</a></li>
+        <li class="nav-item"><a class="nav-link" href="application.html">My Application</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="settingsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-gear"></i> Settings
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
+            <li><h6 class="dropdown-header">Theme</h6></li>
+            <li>
+              <a class="dropdown-item theme-option" data-theme="light">
+                <i class="bi bi-sun-fill theme-icon"></i> Light
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item theme-option" data-theme="dark">
+                <i class="bi bi-moon-stars-fill theme-icon"></i> Dark
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item theme-option" data-theme="auto">
+                <i class="bi bi-circle-half theme-icon"></i> Auto
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li><h6 class="dropdown-header">Notifications</h6></li>
+            <li>
+              <div class="dropdown-item">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="notificationsToggle" checked>
+                  <label class="form-check-label" for="notificationsToggle">Enable Notifications</label>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="dropdown-item">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="jobAlertsToggle" checked>
+                  <label class="form-check-label" for="jobAlertsToggle">Job Alerts</label>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container text-center mt-5">
+    <h1 class="mb-4 text-primary fw-bold">Welcome to CareerQuest</h1>
+    <p class="lead mb-4">Discover job opportunities that perfectly match your skills and experience.</p>
+    
+    <!-- Testimonial Section -->
+    <div class="row justify-content-center mb-5">
+      <div class="col-md-10">
+        <div class="alert alert-success p-4">
+          <i class="bi bi-quote fs-3"></i>
+          <p class="fst-italic mb-1">"CareerQuest helped me find my dream job in just 2 weeks! The AI recommendations were spot-on with my experience."</p>
+          <small class="fw-bold">— Sarah T., Software Developer</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row mb-5">
+      <div class="col-md-6">
+        <div class="card shadow p-3">
+          <h4>🎯 Resume-Based Recommendation</h4>
+          <p>Upload your resume and get personalized job suggestions using AI-powered analysis.</p>
+          <a href="recommend-resume.html" class="btn btn-outline-primary">Try Now</a>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card shadow p-3">
+          <h4>🔍 Skill-Based Recommendation</h4>
+          <p>Enter your skills to explore job roles aligned with your expertise and interests.</p>
+          <a href="recommend-skill.html" class="btn btn-outline-success">Explore Jobs</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Statistics Section -->
+    <div class="row mb-5 g-4">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <h3 class="text-primary">10,000+</h3>
+            <p class="text-muted mb-0">Users Found Jobs</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <h3 class="text-primary">93%</h3>
+            <p class="text-muted mb-0">Match Accuracy</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <h3 class="text-primary">2x</h3>
+            <p class="text-muted mb-0">Faster Job Search</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- CTA Section -->
+    <div class="alert alert-info p-4 mb-5" role="alert">
+      <h4 class="alert-heading">Ready to take the next step in your career?</h4>
+      <p>🚀 Fast. 🎓 Smart. 🛠️ Tailored to You.</p>
+      <hr>
+      <p class="mb-0">Join thousands of professionals who found their dream jobs with CareerQuest's AI-powered recommendations!</p>
+      <button class="btn btn-primary mt-3">Sign Up Free - No Credit Card Required</button>
+    </div>
+    
+    <!-- Features Section -->
+    <div class="row mb-5">
+      <h3 class="mb-4">Why Choose CareerQuest?</h3>
+      <div class="col-md-4 mb-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <i class="bi bi-lightning-charge text-warning fs-1"></i>
+            <h5>Intelligent Matching</h5>
+            <p>Our AI analyzes your skills and matches them with the most relevant job openings.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <i class="bi bi-graph-up-arrow text-success fs-1"></i>
+            <h5>Career Growth Insights</h5>
+            <p>Get personalized recommendations for skills to develop for your next career move.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <i class="bi bi-shield-check text-primary fs-1"></i>
+            <h5>Privacy First</h5>
+            <p>Your data is secure and only used to provide you with better job matches.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Theme handling
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set initial theme from localStorage or system preference
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-bs-theme', savedTheme);
+      } else {
+        // Check for system preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.documentElement.setAttribute('data-bs-theme', 'dark');
+        }
+      }
+      
+      // Theme option click handlers
+      const themeOptions = document.querySelectorAll('.theme-option');
+      themeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          const theme = this.getAttribute('data-theme');
+          
+          if (theme === 'auto') {
+            localStorage.removeItem('theme');
+            // Apply system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-bs-theme', prefersDark ? 'dark' : 'light');
+          } else {
+            localStorage.setItem('theme', theme);
+            document.documentElement.setAttribute('data-bs-theme', theme);
+          }
+        });
+      });
+      
+      // Notification toggles
+      const notificationsToggle = document.getElementById('notificationsToggle');
+      const jobAlertsToggle = document.getElementById('jobAlertsToggle');
+      
+      // Load notification settings from localStorage
+      if (localStorage.getItem('notifications') === 'disabled') {
+        notificationsToggle.checked = false;
+      }
+      
+      if (localStorage.getItem('jobAlerts') === 'disabled') {
+        jobAlertsToggle.checked = false;
+      }
+      
+      // Save notification settings
+      notificationsToggle.addEventListener('change', function() {
+        if (this.checked) {
+          localStorage.setItem('notifications', 'enabled');
+          showToast('Notifications enabled');
+          
+          // If notifications are turned on but browser doesn't support, show message
+          if ('Notification' in window) {
+            if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+              Notification.requestPermission();
+            }
+          }
+        } else {
+          localStorage.setItem('notifications', 'disabled');
+          showToast('Notifications disabled');
+        }
+      });
+      
+      jobAlertsToggle.addEventListener('change', function() {
+        if (this.checked) {
+          localStorage.setItem('jobAlerts', 'enabled');
+          showToast('Job alerts enabled');
+        } else {
+          localStorage.setItem('jobAlerts', 'disabled');
+          showToast('Job alerts disabled');
+        }
+      });
+      
+      // Toast function for feedback
+      function showToast(message) {
+        // Create toast container if it doesn't exist
+        let toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+          toastContainer = document.createElement('div');
+          toastContainer.id = 'toast-container';
+          toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
+          toastContainer.style.zIndex = '5';
+          document.body.appendChild(toastContainer);
+        }
+        
+        // Create toast
+        const toastId = 'toast-' + Date.now();
+        const toastEl = document.createElement('div');
+        toastEl.id = toastId;
+        toastEl.className = 'toast align-items-center text-white bg-primary border-0';
+        toastEl.setAttribute('role', 'alert');
+        toastEl.setAttribute('aria-live', 'assertive');
+        toastEl.setAttribute('aria-atomic', 'true');
+        
+        toastEl.innerHTML = `
+          <div class="d-flex">
+            <div class="toast-body">
+              ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        `;
+        
+        toastContainer.appendChild(toastEl);
+        
+        // Initialize and show the toast
+        const toast = new bootstrap.Toast(toastEl, {
+          delay: 3000,
+          autohide: true
+        });
+        toast.show();
+        
+        // Remove from DOM after hiding
+        toastEl.addEventListener('hidden.bs.toast', function() {
+          toastEl.remove();
+        });
+      }
+    });
+  </script>
+</body>
+</html>

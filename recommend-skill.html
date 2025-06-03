@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill-Based Job Recommendations</title>
+  <!-- Tailwind CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Bootstrap CSS (retained for compatibility) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Choices.js for multi-select -->
+  <link href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" rel="stylesheet">
+  <!-- Google Fonts for Elegant Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #1e40af, #ffffff);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      color: #1f2937;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"%3E%3Cpath fill="%23dbeafe" fill-opacity="0.3" d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,138.7C672,128,768,160,864,186.7C960,213,1056,235,1152,213.3C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"%3E%3C/path%3E%3C/svg%3E');
+      background-size: cover;
+      opacity: 0.2;
+      z-index: 0;
+    }
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid #93c5fd;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+    }
+    .card:hover {
+      box-shadow: 0 6px 25px rgba(59, 130, 246, 0.2);
+      transform: translateY(-3px);
+    }
+    .form-control, .choices__inner {
+      background: #f8fafc;
+      border: 1px solid #bfdbfe;
+      color: #1f2937;
+      border-radius: 6px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .form-control:focus, .choices__inner:focus {
+      border-color: #1e40af;
+      box-shadow: 0 0 6px rgba(30, 64, 175, 0.3);
+      outline: none;
+    }
+    .form-label {
+      color: #1e40af;
+      font-weight: 500;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+    }
+    .btn-classy {
+      background: #1e40af;
+      color: #ffffff;
+      font-weight: 500;
+      border-radius: 6px;
+      padding: 10px;
+      transition: background 0.3s ease, transform 0.2s ease;
+      font-family: 'Roboto', sans-serif;
+    }
+    .btn-classy:hover {
+      background: #1e3a8a;
+      transform: scale(1.03);
+    }
+    .btn-save {
+      background: #3b82f6;
+      color: #ffffff;
+      border-radius: 6px;
+      padding: 6px 12px;
+      transition: background 0.3s ease;
+      font-size: 0.9rem;
+    }
+    .btn-save:hover {
+      background: #2563eb;
+    }
+    .btn-save.saved {
+      background: #10b981;
+    }
+    .title {
+      font-family: 'Playfair Display', serif;
+      color: #1e40af;
+    }
+    .choices__list--dropdown {
+      background: #ffffff;
+      border: 1px solid #bfdbfe;
+      color: #1f2937;
+    }
+    .choices__item--selectable:hover {
+      background: #dbeafe;
+    }
+    ::placeholder {
+      color: #6b7280;
+    }
+    .job-card {
+      transition: all 0.3s ease;
+    }
+    .job-card:hover {
+      background: #f8fafc;
+    }
+    .analysis-card {
+      background: #f8fafc;
+      border: 1px solid #93c5fd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-8 mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-6 title">Find Jobs by Your Skills</h2>
+    <div class="card p-6 mb-6">
+      <form id="skillForm">
+        <div class="mb-4">
+          <label for="skillsInput" class="form-label">Select Skills</label>
+          <select id="skillsInput" multiple class="form-control" placeholder="e.g., JavaScript, Python, SQL" required>
+            <option>JavaScript</option>
+            <option>Python</option>
+            <option>SQL</option>
+            <option>Java</option>
+            <option>C++</option>
+            <option>React</option>
+            <option>Node.js</option>
+            <option>Data Analysis</option>
+            <option>Machine Learning</option>
+            <option>Cloud Computing</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label for="categoryInput" class="form-label">Job Category</label>
+          <select id="categoryInput" class="form-control">
+            <option value="all">All Categories</option>
+            <option value="software">Software Development</option>
+            <option value="data">Data Science</option>
+            <option value="cloud">Cloud Engineering</option>
+            <option value="frontend">Frontend Development</option>
+            <option value="backend">Backend Development</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-classy w-full py-2">Get Job Roles</button>
+      </form>
+    </div>
+
+    <div id="results" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+    <div id="skillAnalysis" class="mt-6 card p-6 analysis-card hidden">
+      <h3 class="text-xl font-bold title mb-4">Skill Demand Analysis</h3>
+      <div id="analysisContent"></div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script>
+    // Initialize Choices.js for skills input
+    const skillsInput = document.getElementById('skillsInput');
+    new Choices(skillsInput, {
+      removeItemButton: true,
+      placeholderValue: 'e.g., JavaScript, Python, SQL',
+      maxItemCount: 5,
+      searchEnabled: true
+    });
+
+    // Mock job data
+    const jobData = [
+      { id: 1, title: 'Frontend Developer', company: 'TechCorp', location: 'Remote', skills: ['JavaScript', 'React'], category: 'frontend', match: 92 },
+      { id: 2, title: 'Data Scientist', company: 'DataWorks', location: 'New York', skills: ['Python', 'Machine Learning', 'SQL'], category: 'data', match: 88 },
+      { id: 3, title: 'Backend Engineer', company: 'CloudNet', location: 'San Francisco', skills: ['Node.js', 'SQL', 'Java'], category: 'backend', match: 85 },
+      { id: 4, title: 'Cloud Architect', company: 'SkyTech', location: 'London', skills: ['Cloud Computing', 'Python'], category: 'cloud', match: 90 },
+      { id: 5, title: 'Full Stack Developer', company: 'Innovate', location: 'Berlin', skills: ['JavaScript', 'Node.js', 'React'], category: 'software', match: 87 }
+    ];
+
+    // Mock skill demand data
+    const skillDemand = {
+      'JavaScript': { demand: 'High', trend: 'Growing', avgSalary: '$110,000' },
+      'Python': { demand: 'Very High', trend: 'Stable', avgSalary: '$120,000' },
+      'SQL': { demand: 'Moderate', trend: 'Stable', avgSalary: '$95,000' },
+      'Java': { demand: 'Moderate', trend: 'Declining', avgSalary: '$105,000' },
+      'C++': { demand: 'Low', trend: 'Declining', avgSalary: '$100,000' },
+      'React': { demand: 'High', trend: 'Growing', avgSalary: '$115,000' },
+      'Node.js': { demand: 'High', trend: 'Growing', avgSalary: '$112,000' },
+      'Data Analysis': { demand: 'High', trend: 'Stable', avgSalary: '$90,000' },
+      'Machine Learning': { demand: 'Very High', trend: 'Growing', avgSalary: '$130,000' },
+      'Cloud Computing': { demand: 'High', trend: 'Growing', avgSalary: '$125,000' }
+    };
+
+    // Form submission handler
+    document.getElementById('skillForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const selectedSkills = Array.from(skillsInput.selectedOptions).map(opt => opt.value);
+      const selectedCategory = document.getElementById('categoryInput').value;
+
+      // Filter jobs based on skills and category
+      const filteredJobs = jobData.filter(job => {
+        const skillMatch = selectedSkills.some(skill => job.skills.includes(skill));
+        const categoryMatch = selectedCategory === 'all' || job.category === selectedCategory;
+        return skillMatch && categoryMatch;
+      });
+
+      // Display job results
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+      if (filteredJobs.length === 0) {
+        resultsDiv.innerHTML = '<p class="text-gray-600 text-center">No jobs found for the selected skills and category.</p>';
+      } else {
+        filteredJobs.forEach(job => {
+          const jobCard = `
+            <div class="card p-4 job-card">
+              <h3 class="text-lg font-bold title">${job.title}</h3>
+              <p class="text-gray-600">${job.company} - ${job.location}</p>
+              <p class="text-gray-500">Skills: ${job.skills.join(', ')}</p>
+              <p class="text-blue-600">Match Score: ${job.match}%</p>
+              <button class="btn-save mt-2" data-job-id="${job.id}">${isSaved(job.id) ? 'Saved' : 'Save Job'}</button>
+            </div>
+          `;
+          resultsDiv.innerHTML += jobCard;
+        });
+      }
+
+      // Display skill analysis
+      const analysisDiv = document.getElementById('skillAnalysis');
+      const analysisContent = document.getElementById('analysisContent');
+      analysisContent.innerHTML = '';
+      if (selectedSkills.length > 0) {
+        analysisDiv.classList.remove('hidden');
+        selectedSkills.forEach(skill => {
+          const data = skillDemand[skill] || { demand: 'Unknown', trend: 'Unknown', avgSalary: 'N/A' };
+          analysisContent.innerHTML += `
+            <div class="mb-4">
+              <h4 class="title">${skill}</h4>
+              <p>Demand: <span class="text-blue-600">${data.demand}</span></p>
+              <p>Trend: <span class="text-blue-500">${data.trend}</span></p>
+              <p>Average Salary: <span class="text-gray-600">${data.avgSalary}</span></p>
+            </div>
+          `;
+        });
+      } else {
+        analysisDiv.classList.add('hidden');
+      }
+
+      // Add event listeners for save buttons
+      document.querySelectorAll('.btn-save').forEach(button => {
+        button.addEventListener('click', function() {
+          const jobId = this.getAttribute('data-job-id');
+          toggleSaveJob(jobId, this);
+        });
+      });
+    });
+
+    // Save job functionality
+    function isSaved(jobId) {
+      const savedJobs = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+      return savedJobs.includes(jobId);
+    }
+
+    function toggleSaveJob(jobId, button) {
+      let savedJobs = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+      if (savedJobs.includes(jobId)) {
+        savedJobs = savedJobs.filter(id => id !== jobId);
+        button.textContent = 'Save Job';
+        button.classList.remove('saved');
+      } else {
+        savedJobs.push(jobId);
+        button.textContent = 'Saved';
+        button.classList.add('saved');
+      }
+      localStorage.setItem('savedJobs', JSON.stringify(savedJobs));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.22.9/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #F5F9FF;
+        }
+        .container {
+            background-color: #FFFFFF;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: #1E3A8A;
+        }
+        .form-card {
+            background-color: #EFF6FF;
+            border: 1px solid #DBEAFE;
+        }
+        .input-field {
+            background-color: #FFFFFF;
+            border: 1px solid #93C5FD;
+            transition: border-color 0.3s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #2563EB;
+        }
+        .btn-primary {
+            background-color: #2563EB;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #1E3A8A;
+        }
+        .btn-danger {
+            background-color: #DC2626;
+            transition: background-color 0.3s;
+        }
+        .btn-danger:hover {
+            background-color: #B91C1C;
+        }
+        .select-field {
+            background-color: #FFFFFF;
+            border: 1px solid #93C5FD;
+        }
+        .application-card {
+            background-color: #EFF6FF;
+            border: 1px solid #DBEAFE;
+        }
+        .text-muted {
+            color: #6B7280;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const App = () => {
+            const [applications, setApplications] = useState([]);
+            const [newApp, setNewApp] = useState({
+                company: '',
+                position: '',
+                status: 'Applied',
+                date: '',
+                resume: '',
+                skills: ''
+            });
+            const [filter, setFilter] = useState('All');
+
+            // Load applications from localStorage
+            useEffect(() => {
+                const storedApps = localStorage.getItem('applications');
+                if (storedApps) {
+                    setApplications(JSON.parse(storedApps));
+                }
+            }, []);
+
+            // Save applications to localStorage
+            useEffect(() => {
+                localStorage.setItem('applications', JSON.stringify(applications));
+            }, [applications]);
+
+            // Handle input changes
+            const handleInputChange = (e) => {
+                const { name, value } = e.target;
+                setNewApp({ ...newApp, [name]: value });
+            };
+
+            // Add new application
+            const addApplication = (e) => {
+                e.preventDefault();
+                if (newApp.company && newApp.position) {
+                    setApplications([...applications, { ...newApp, id: Date.now() }]);
+                    setNewApp({
+                        company: '',
+                        position: '',
+                        status: 'Applied',
+                        date: '',
+                        resume: '',
+                        skills: ''
+                    });
+                }
+            };
+
+            // Update application status
+            const updateStatus = (id, status) => {
+                setApplications(applications.map(app =>
+                    app.id === id ? { ...app, status } : app
+                ));
+            };
+
+            // Delete application
+            const deleteApplication = (id) => {
+                setApplications(applications.filter(app => app.id !== id));
+            };
+
+            // Filter applications
+            const filteredApplications = filter === 'All'
+                ? applications
+                : applications.filter(app => app.status === filter);
+
+            return (
+                <div className="container mx-auto p-6 rounded-lg max-w-4xl">
+                    <h1 className="text-3xl font-bold mb-6 text-center">Application Tracker</h1>
+                    
+                    {/* Add Application Form */}
+                    <div className="mb-8 p-6 form-card rounded-lg">
+                        <h2 className="text-xl font-semibold mb-4">Add New Application</h2>
+                        <form onSubmit={addApplication} className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <input
+                                type="text"
+                                name="company"
+                                value={newApp.company}
+                                onChange={handleInputChange}
+                                placeholder="Company Name"
+                                className="p-2 input-field rounded"
+                                required
+                            />
+                            <input
+                                type="text"
+                                name="position"
+                                value={newApp.position}
+                                onChange={handleInputChange}
+                                placeholder="Position"
+                                className="p-2 input-field rounded"
+                                required
+                            />
+                            <select
+                                name="status"
+                                value={newApp.status}
+                                onChange={handleInputChange}
+                                className="p-2 select-field rounded"
+                            >
+                                <option value="Applied">Applied</option>
+                                <option value="Interview">Interview</option>
+                                <option value="Offer">Offer</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                            <input
+                                type="date"
+                                name="date"
+                                value={newApp.date}
+                                onChange={handleInputChange}
+                                className="p-2 input-field rounded"
+                            />
+                            <input
+                                type="text"
+                                name="resume"
+                                value={newApp.resume}
+                                onChange={handleInputChange}
+                                placeholder="Resume Link/Version"
+                                className="p-2 input-field rounded"
+                            />
+                            <input
+                                type="text"
+                                name="skills"
+                                value={newApp.skills}
+                                onChange={handleInputChange}
+                                placeholder="Skills (comma-separated)"
+                                className="p-2 input-field rounded"
+                            />
+                            <button
+                                type="submit"
+                                className="col-span-1 md:col-span-2 btn-primary text-white p-2 rounded"
+                            >
+                                Add Application
+                            </button>
+                        </form>
+                    </div>
+
+                    {/* Filter Applications */}
+                    <div className="mb-6 flex items-center">
+                        <label className="mr-2 text-muted">Filter by Status:</label>
+                        <select
+                            value={filter}
+                            onChange={(e) => setFilter(e.target.value)}
+                            className="p-2 select-field rounded"
+                        >
+                            <option value="All">All</option>
+                            <option value="Applied">Applied</option>
+                            <option value="Interview">Interview</option>
+                            <option value="Offer">Offer</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+
+                    {/* Application List */}
+                    <div className="mb-8">
+                        <h2 className="text-xl font-semibold mb-4">Your Applications</h2>
+                        {filteredApplications.length === 0 ? (
+                            <p className="text-muted">No applications found.</p>
+                        ) : (
+                            <div className="grid gap-4">
+                                {filteredApplications.map(app => (
+                                    <div key={app.id} className="p-4 application-card rounded-lg flex justify-between items-center">
+                                        <div>
+                                            <h3 className="text-lg font-medium">{app.company} - {app.position}</h3>
+                                            <p className="text-muted">Status: {app.status}</p>
+                                            <p className="text-muted">Date: {app.date || 'N/A'}</p>
+                                            <p className="text-muted">Resume: {app.resume || 'N/A'}</p>
+                                            <p className="text-muted">Skills: {app.skills || 'N/A'}</p>
+                                        </div>
+                                        <div className="flex space-x-2">
+                                            <select
+                                                value={app.status}
+                                                onChange={(e) => updateStatus(app.id, e.target.value)}
+                                                className="p-1 select-field rounded"
+                                            >
+                                                <option value="Applied">Applied</option>
+                                                <option value="Interview">Interview</option>
+                                                <option value="Offer">Offer</option>
+                                                <option value="Rejected">Rejected</option>
+                                            </select>
+                                            <button
+                                                onClick={() => deleteApplication(app.id)}
+                                                className="btn-danger text-white p-1 rounded"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
